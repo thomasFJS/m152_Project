@@ -28,34 +28,38 @@ if (session_status() == PHP_SESSION_NONE) {
 <?php
     include "./navbar/navbar.php";
 ?>
-<div class="row">
-      <form class="col s12">
+<div class="col s12 m8 offset-m2 l6 offset-l3">
+        <div class="card-panel grey lighten-5 z-depth-1">
+  <div class="row">
+      <form class="col s12">   
         <div class="row">
-          <div class="input-field col s6">
-            <input id="input_text" type="text" data-length="10">
-            <label for="input_text">Nom</label>
+        <div class="col s2">
+              <img src="img/pdp.jpg" alt="" class="circle responsive-img" height="100px" width="100px">
+            </div>
+          <div class="input-field col s10">
+            <textarea id="textarea" class="materialize-textarea" data-length="120"></textarea>
+            <label for="textarea">Comment</label>
           </div>
         </div>
         <div class="row">
-          <div class="input-field col s12">
-            <textarea id="textarea2" class="materialize-textarea" data-length="120"></textarea>
-            <label for="textarea2">Textarea</label>
-          </div>
-        </div>
-        <div class="row">
-        <div class="file-field input-field">
+        <div class="file-field input-field s10">
       <div class="btn">
         <span>File</span>
         <input type="file" accept="image/*" multiple>
       </div>
       <div class="file-path-wrapper">
-        <input class="file-path validate" type="text" placeholder="Upload one or more files">
+        <input class="file-path validate input-name" type="text" placeholder="">
       </div>
      </div>
     </div> 
       </form>
     </div>
+    </div>
+</div>
+</div>
 
-<script type="text/javascript" src="js/materialize.min.js"></script>
+
+<script type="text/javascript" src="script/materialize.min.js"></script>
+<script type="text/javascript" src="script/script.js"></script>
 </body>
 </html>

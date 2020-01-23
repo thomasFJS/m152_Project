@@ -1,7 +1,7 @@
 <?php
 DEFINE('DB_DBTYPE', "mysql");
 DEFINE('DB_HOST', "127.0.0.1");
-DEFINE('DB_NAME', "");//To Define...
+DEFINE('DB_NAME', "dbPostm152");
 DEFINE('DB_USER', "Admin");
 DEFINE('DB_PASS', "Super2012");
 

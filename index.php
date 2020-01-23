@@ -41,9 +41,9 @@ if (session_status() == PHP_SESSION_NONE) {
         </div>
       </div>
     </div>
-  </div>
-            
-<script type="text/javascript" src="js/materialize.min.js"></script>
+  </div>  
+<script type="text/javascript" src="script/materialize.min.js"></script>
+<script type="text/javascript" src="script/script.js"></script>
 </body>
 </html>
 
