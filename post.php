@@ -31,25 +31,36 @@ if (session_status() == PHP_SESSION_NONE) {
 <div class="col s12 m8 offset-m2 l6 offset-l3">
         <div class="card-panel grey lighten-5 z-depth-1">
   <div class="row">
-      <form class="col s12">   
+      <form class="col s12" method="POST" action="./upload.php">   
         <div class="row">
         <div class="col s2">
               <img src="img/pdp.jpg" alt="" class="circle responsive-img" height="100px" width="100px">
             </div>
+      </div>  
+      <div class="row">
           <div class="input-field col s10">
-            <textarea id="textarea" class="materialize-textarea" data-length="120"></textarea>
+            <textarea id="textarea" name="comment" class="materialize-textarea" data-length="140"></textarea>
             <label for="textarea">Comment</label>
           </div>
-        </div>
-        <div class="row">
-        <div class="file-field input-field s10">
+     </div>
+     <div class="row">
+     <div class="file-field col input-field s12">
       <div class="btn">
         <span>File</span>
-        <input type="file" accept="image/*" multiple>
+        <input type="file" name="imgUpload" accept="image/*" multiple>
       </div>
       <div class="file-path-wrapper">
-        <input class="file-path validate input-name" type="text" placeholder="">
+        <input class="file-path validate input-name" type="text" placeholder="Add one or more image(s)">
       </div>
+          
+        </div>
+     </div>
+     <div class="row">
+      <div class="input-field col s10">  
+      <button class="btn waves-effect waves-light" type="submit" name="submit">Submit
+        <i class="material-icons right">send</i>
+      </button>
+     </div>
      </div>
     </div> 
       </form>
