@@ -7,8 +7,8 @@
 *     Starting Date       :  23.01.2020.
 */
 
-require_once("./inc/dbConnect.php");
-require_once("./inc/function.php");
+require_once $_SERVER['DOCUMENT_ROOT'].'/M152/M152_Project/inc/dbConnect.php';
+require_once $_SERVER['DOCUMENT_ROOT']. '/M152/M152_Project/inc/function.php';
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -16,7 +16,7 @@ if (session_status() == PHP_SESSION_NONE) {
 ?>
 <!DOCTYPE html>
 <html lang="FR" dir="ltr">
-<head>
+<head> 
     <meta charset="utf-8">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
@@ -27,6 +27,7 @@ if (session_status() == PHP_SESSION_NONE) {
 <body>
 <?php
     include "./navbar/navbar.php";
+    
 ?>
 
 <div class="row">

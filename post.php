@@ -7,8 +7,8 @@
 *     Starting Date       :  23.01.2020.
 */
 
-require_once("./inc/dbConnect.php");
-require_once("./inc/function.php");
+require_once $_SERVER['DOCUMENT_ROOT'].'/M152/M152_Project/inc/dbConnect.php';
+require_once $_SERVER['DOCUMENT_ROOT']. '/M152/M152_Project/inc/function.php';
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -31,7 +31,7 @@ if (session_status() == PHP_SESSION_NONE) {
 <div class="col s12 m8 offset-m2 l6 offset-l3">
         <div class="card-panel grey lighten-5 z-depth-1">
   <div class="row">
-      <form class="col s12" method="POST" action="./upload.php">   
+      <form class="col s12" method="POST" action="./upload.php" enctype='multipart/form-data'>   
         <div class="row">
         <div class="col s2">
               <img src="img/pdp.jpg" alt="" class="circle responsive-img" height="100px" width="100px">
@@ -46,10 +46,10 @@ if (session_status() == PHP_SESSION_NONE) {
      <div class="row">
      <div class="file-field col input-field s12">
       <div class="btn">
-        <span>File</span>
-        <input type="file" name="imgUpload" accept="image/*" multiple>
+      <i class="material-icons">image</i>
+        <input type="file" name="imgUpload[]" id="imgUpload" accept="image/*" multiple>
       </div>
-      <div class="file-path-wrapper">
+      <div class="file-path-wrapper" style="display:none;">
         <input class="file-path validate input-name" type="text" placeholder="Add one or more image(s)">
       </div>
           
