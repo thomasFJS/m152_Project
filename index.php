@@ -34,9 +34,10 @@ if (session_status() == PHP_SESSION_NONE) {
     <div class="col s12 m7">
       <div class="card">
         <div class="card-image">
-          <img src="./img/welcomeImage.jpg">
+          <img src="./uploads/welcomeImage.jpg">
           <span class="card-title"><h1>Welcome</h1></span>
         </div>
+        <?= ShowAllMedia(); ?>
         <div class="card-content">
           <p>Welcome to our portfolio website.</p>
         </div>
