@@ -36,16 +36,16 @@ if (session_status() == PHP_SESSION_NONE) {
         <div class="card-image">
           <img src="./uploads/welcomeImage.jpg">
           <span class="card-title"><h1>Welcome</h1></span>
-        </div>
-        <?= ShowAllMedia(); ?>
+        </div>        
         <div class="card-content">
           <p>Welcome to our portfolio website.</p>
         </div>
       </div>
+      <?= ShowAllMedia(); ?>
     </div>
   </div>  
 <script type="text/javascript" src="script/materialize.min.js"></script>
-<script type="text/javascript" src="script/script.js"></script>
+<script type="text/javascript" src="./script/script.js"></script>
 </body>
 </html>
 

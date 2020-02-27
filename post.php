@@ -46,7 +46,7 @@ if ($comment){
       <form class="col s12" method="POST" action="post.php" enctype='multipart/form-data'>   
         <div class="row">
         <div class="col s2">
-              <img src="img/pdp.jpg" alt="" class="circle responsive-img" height="100px" width="100px">
+              <img src="uploads/pdp.jpg" alt="" class="circle responsive-img" height="100px" width="100px">
             </div>
       </div>  
       <div class="row">

@@ -16,123 +16,21 @@ define('VALID_EXTENSION', array(
 ));
 define('UPLOADS_DIR', realpath(dirname(__FILE__)) . './uploads/');
 
-/**
- * Function for post creation with all the media the user upload 
- */
-function createPost($comment, $creationDate, $mediaArray){
-    
-    //First insert
-    $sql = <<<EX
-    INSERT INTO t_post (comment, creationDate) VALUES (:comment, :creationDate)
-    EX;  
-    try{ 
-        //Start first transaction
-    EDatabase::getDb()->beginTransaction();
-    $req = EDatabase::getDb()->prepare($sql);
-    $req->bindParam(':comment', $comment, \PDO::PARAM_STR);
-    $req->bindParam(':creationDate', $creationDate, \PDO::PARAM_STR);
-    try{
-        //Execute the insert and commit the transaction
-        $req->execute();
-        $postId = EDatabase::getDb()->lastInsertId();
-        EDatabase::getDb()->commit();
-    }
-    catch(PDOException $e){
-        //If execute fail
-        echo "Can't read the database".$e->getMessage();
-        EDatabase::getDb()->rollBack();
-    }   
-    //Foreach media 
-    foreach($mediaArray as $media){
-        //Second insert
-        $sql = <<<EX
-        INSERT INTO t_media (mediaType, mediaName, creationDate) VALUES (:mediaType, :mediaName, :creationDate)
-        EX;
-        //Start another transaction
-        EDatabase::getDb()->beginTransaction();
-
-        $req = EDatabase::getDb()->prepare($sql);
-        $req->bindParam(':mediaType', $media[0], \PDO::PARAM_STR);
-        $req->bindParam(':mediaName', $media[1], \PDO::PARAM_STR);
-        $req->bindParam(':creationDate', $media[2], \PDO::PARAM_STR);
-        try{
-            $req->execute();
-            $lastMediaId = EDatabase::getDb()->LastInsertId();
-        }
-        catch(PDOException $e){
-            echo "Can't read the database".$e->getMessage();
-            EDatabase::getDb()->rollBack();
-        }
-
-        //Third insert
-        $sql = <<<EX
-        INSERT INTO t_contenir (idMedia, idPost) VALUES (:idMedia, :idPost) 
-        EX;
-        $req = EDatabase::getDb()->prepare($sql);
-        $req->bindParam('idMedia', $lastMediaId, \PDO::PARAM_INT);
-        $req->bindParam(':idPost', $postId, \PDO::PARAM_INT);
-        try{
-            $req->execute();
-        }
-        catch(PDOException $e){
-            echo "Can't read the database".$e->getMessage();
-            EDatabase::getDb()->rollBack();
-        }       
-    } 
-    EDatabase::getDb()->commit(); 
-}
-catch(Exception $e){
-    EDatabase::getDb()->rollBack();
-}
-}
-
-function getAllPost(){
-    $medias = [];
-    $posts = [];
-    $sql = <<<EX
-    SELECT p.idPost, p.comment, p.creationDate, p.modificationDate 
-    FROM t_post as p
-    EX;
-    $req = EDatabase::getDb()->prepare($sql);
-    try{
-        $req->execute();
-        $posts = $req->fetchAll();
-    }
-    catch(PDOException $e){
-        echo "Can't read the database".$e->getMessage();
-    }
-    if($req->rowCount() > 0){
-        $sql = <<<EX
-        SELECT c.idPost, m.idMedia, m.mediaType, m.mediaName, m.creationDate, m.modificationDate 
-        FROM t_media as m JOIN t_contenir as c ON c.idMedia = m.idMedia
-        EX;
-        try{
-            $req->execute();
-            $medias = $req->fetchAll();
-        }
-        catch(PDOException $e){
-            echo "Can't read the database".$e->getMessage();
-        }
-    }
-    foreach($posts as $post)
-    {
-        
-    }
-
-}
-
 function StoreUsersMedia($comment)
 {
+    //get date of creation
+    $date = date("Y-m-d H:i:s");
+
     $target_dir = "./uploads/";
 
     $sql = <<<EX
-    INSERT INTO t_post (comment, creationDate) VALUES (:comment)
+    INSERT INTO t_post (comment, creationDate) VALUES (:comment, :creationDate)
     EX;
   try {
     EDatabase::getDb()->beginTransaction();
     $req = EDatabase::getDb()->prepare($sql);
     $req->bindParam(':comment', $comment, \PDO::PARAM_STR);
-    $req->bindParam(':creationDate', date("Y-m-d H:i:s"), \PDO::PARAM_STR);
+    $req->bindParam(':creationDate', $date, \PDO::PARAM_STR);
     $req->execute();
     $files = $_FILES["fileUploaded"];
 
@@ -140,14 +38,14 @@ function StoreUsersMedia($comment)
 
     foreach ($files["error"] as $key => $error) {
       if ($error == UPLOAD_ERR_OK) {
-        if (in_array($files["type"], VALID_EXTENSION)) {
+        if (in_array($files["type"][$key], VALID_EXTENSION)) {
           $tmp_name = $files["tmp_name"][$key];
           $user_filename = basename($files["name"][$key]);
           $split = explode(".", $user_filename);
           $extension = end($split);
           $filename = uniqid() . "." . $extension;
           $filetype = $files["type"][$key];
-          $target_file = $target_dir . $user_filename;
+          $target_file = $target_dir . $filename;
 
           move_uploaded_file($tmp_name, $target_file);
           $sql = <<<EX
@@ -156,19 +54,19 @@ function StoreUsersMedia($comment)
           $req = EDatabase::getDb()->prepare($sql);
           $req->bindParam(':mediaType', $filetype, \PDO::PARAM_STR);
           $req->bindParam(':mediaName', $filename, \PDO::PARAM_STR);
-          $req->bindParam(':creationDate', date("Y-m-d H:i:s"), \PDO::PARAM_STR);
-          $req->bindParam(':creationDate', $idPost, \PDO::PARAM_INT);
+          $req->bindParam(':creationDate', $date, \PDO::PARAM_STR);
+          $req->bindParam(':idPost', $idPost, \PDO::PARAM_INT);
           $req->execute();
         }
         else {
-          throw new PDOException("Mauvais type de fichier", 1);
+          throw new PDOException("Wrong type of file", 1);
 
         }
       }
     }
     EDatabase::getDb()->commit();
   } catch (PDOException $e) {
-
+    echo "Can't read the database".$e->getMessage();
     EDatabase::getDb()->rollback();
 
   }
@@ -184,14 +82,13 @@ function ShowAllMedia()
     ORDER BY p.idPost DESC
     EX;
   $req = EDatabase::getDb()->prepare($sql);
-
+  $req->execute();
   $data = $req->fetchAll(PDO::FETCH_ASSOC);
   $posts = [];
-
-  for ($i = 0; $i < count($data);) {
+  for ($i = 0; $i < count($data);$i++) {
     $post = [
       'idPost' => $data[$i]['idPost'],
-      'commentaire' => $data[$i]['comment'],
+      'comment' => $data[$i]['comment'],
       'creationDate' => $data[$i]['creationDate'],
       'modificationDate' => $data[$i]['modificationDate']
     ];
@@ -212,13 +109,23 @@ function ShowAllMedia()
   }
   $message = "";
   foreach ($posts as $post => $value) {
-
-    $message .= "<p>" . $value['commentaire'] . "</p>";
+    $message .= <<<EOT
+    <div class="card">
+    <div class="card-image">
+    <div class="slider">
+    <ul class="slides">
+    EOT;
 
     foreach ($value['medias'] as $key => $valueMedia) {
       //La condition pour vérifier si c'est une image
       if (explode('/', $valueMedia['mediaType'])[0] == "image") {
-        $message .= "<img src='uploads/" . $valueMedia['mediaName'] . "' alt=" . $valueMedia['mediaName'] . ">";
+        //$message .= "<img src='uploads/" . $valueMedia['mediaName'] . "' alt=" . $valueMedia['mediaName'] . ">";
+        $isActive = ($key == 0) ? "active" : "";
+        $message .= <<<EOT
+        <li class="{$isActive}">
+        <img src="uploads/{$valueMedia['mediaName']}" alt="{$valueMedia['mediaName']}">   
+        </li>
+        EOT;
       }
       //Condition pour la vidéo
       elseif (explode('/', $valueMedia['mediaType'])[0] == "video") {
@@ -235,7 +142,18 @@ function ShowAllMedia()
         $message .= "</audio>";
       }
     }
-    $message .= "<br>publié " . $value["datePost"];
+    //Set good format for date
+    $dateCreation = date_format(date_create($value["creationDate"]), 'g:ia \o\n l jS F Y');
+    $message .= <<<EOT
+    </ul>
+    </div>
+    </div>
+    <div class="card-content">      
+      <p>{$value["comment"]}</p>
+      <p>Published : {$dateCreation}</p>
+    </div>
+    </div>
+    EOT;
   }
 return $message;
 }
