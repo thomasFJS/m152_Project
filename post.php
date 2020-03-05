@@ -44,11 +44,7 @@ if ($comment){
         <div class="card-panel grey lighten-5 z-depth-1">
   <div class="row">
       <form class="col s12" method="POST" action="post.php" enctype='multipart/form-data'>   
-        <div class="row">
-        <div class="col s2">
-              <img src="uploads/pdp.jpg" alt="" class="circle responsive-img" height="100px" width="100px">
-            </div>
-      </div>  
+        
       <div class="row">
           <div class="input-field col s10">
             <textarea id="textarea" name="comment" class="materialize-textarea" data-length="140"></textarea>
@@ -59,7 +55,7 @@ if ($comment){
      <div class="file-field col input-field s12">
       <div class="btn">
       <i class="material-icons">image</i>
-        <input type="file" name="fileUploaded[]" id="fileUploaded" accept="image/*" multiple>
+        <input type="file" name="fileUploaded[]" id="fileUploaded" accept="audio/* | video/* | image/*" multiple>
       </div>
       <div class="file-path-wrapper" style="display:none;">
         <input class="file-path validate input-name" type="text" placeholder="Add one or more image(s)">
