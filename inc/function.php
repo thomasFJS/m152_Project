@@ -242,4 +242,20 @@ catch (PDOException $e) {
   EDatabase::getDb()->rollback();
 }
 }
+
+function getMediaName($idPost){
+  $sql = <<<EOT
+  SELECT mediaName FROM t_media WHERE idPost = :idPost
+  EOT;
+  try{
+    $req = EDatabase::getDb()->prepare($sql);
+    $req->bindParam(':idPost', $idPost, PDO::PARAM_INT);
+    $req->execute();
+    $data = $req->fetchAll(PDO::FETCH_ASSOC);
+  }
+  catch(PDOException $e){
+    echo "Can't read the database".$e->getMessage();
+  }
+  return $data;
+}
 ?>
